@@ -1,0 +1,80 @@
+﻿@model TodoList;
+@{
+    ViewData["Title"] = "Todo App";
+}
+
+<div class="container-fluid rounded-3 border border-2 border-dark my-5 bg-white" style="height:auto;">
+    <div>
+        <h1 class=" h1">To Do List</h1>
+        <div class="row">
+            <form class="row" action="~/Home/Add" method="post">
+                <div class="col-8">
+                    <input class=" py-3 form-control shadow" placeholder="input your task" type="text" id="taskName" name="taskName">
+                </div>
+                <div class="col-2">
+                    <!-- <i onclick="addList()" class=" btn btn-dark rounded-pill fas fa-4x fa-plus-circle "></i> -->
+                    <button class=" mt-2 btn btn-primary" type="submit"> Add </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <hr>
+    <div class="row rounded bg-white">
+        <div class="col-md-12">
+            <ul class="col-md-12 list-group" id="list">
+                @if (Model.Data != null)
+                {
+                    @foreach (var item in Model.Data)
+                    {
+                        <li class="my-3 py-3 shadow list-group-item" id="list">
+                            <div class="row align-items-center">
+                                <input type="hidden" class="task-id" value="@item.TaskId">
+                                <div class="col-md-3">
+                                    @if (item.Status == true)
+                                    {
+                                        <a href="~/Home/UpdateStatus?taskId=@item.TaskId&newStatus=false" class="btn btn-success" style="text-decoration:none; border:0px; color:white; background-color:#146c43;">Completed</a>
+                                    }
+                                    else
+                                    {
+                                        <a href="~/Home/UpdateStatus?taskId=@item.TaskId&newStatus=true" class="btn btn-success" style="text-decoration:none; border:0px; color:white; background-color:gray;">Undo</a>
+                                    }
+                                </div>
+
+                                <div class="col-md-5">
+                                    <span class="h5" id="data-taskName" style="@(item.Status ? "" : "color: #D3D3D3;")
+                                    display: inline-block;
+                                    width: 100%;
+                                    overflow: hidden;
+                                    white-space: nowrap;
+                                    text-overflow: ellipsis;">@item.TaskName </span>
+                                </div>
+                                <div class="col-md-4">
+                                    <a href="#" class="btn btn-success" id="btn-edit" style="text-decoration:none; border:0px; color:white; background-color:#ffc107;" onclick="changeValue()">Edit</a>
+                                    <a href="~/Home/Update?taskId=@item.TaskId&taskName=" id="datataskname" class="btn btn-success" style="text-decoration:none; border:0px; color:white; background-color:#146c43;" onclick="getInputValue()" hidden>Save</a>
+                                    <a href="~/Home/Delete?taskId=@item.TaskId" class="btn btn-success" style="text-decoration:none; border:0px; color:white; background-color:#dc3545;">Delete</a>
+                                </div>
+                            </div>
+                        </li>
+
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+@section scripts {
+    <script>
+        function changeValue() {
+            let task = prompt("Please enter your name", "Harry Potter");
+            var link = document.getElementById("datataskname").getAttribute("href");
+            var newLink = link + task;
+            document.getElementById("btn-edit").setAttribute("hidden", false);
+            document.getElementById("data-taskName").innerHTML = task;
+            document.getElementById("datataskname").removeAttribute("hidden");
+            document.getElementById("datataskname").setAttribute("href", newLink);
+        }
+        
+    </script>
+}
